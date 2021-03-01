@@ -1,6 +1,9 @@
 # Getting Started
 Quickly setup WordPress and SSL using docker-compose.
+
 ```
+$ mkdir www
+$ chown -R www-data:www-data www
 $ docker-compose up
 ```
 

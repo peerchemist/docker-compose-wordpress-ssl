@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.5'
 
 services:
 
@@ -11,10 +11,11 @@ services:
       - ./config:/config
       - ./default:/config/nginx/site-confs/default
     environment:
-      - EMAIL=email@example.com
-      - URL=www.example.com
+      - EMAIL=example@protonmail.com
+      - URL=example.eu
+      - SUBDOMAINS=www
       - VALIDATION=http
-      - TZ=Europe/London
+      - TZ=Europe/Berlin
       - PUID=500
       - PGID=500
     ports:
@@ -30,22 +31,25 @@ services:
     restart: always
     ports:
       - "8080:80"
+    extra_hosts:
+      - "example.eu:127.0.0.1"
+      - "www.example.com:127.0.0.1"
     volumes:
-      - /var/www/html/example/wp-content:/var/www/html/wp-content
-      - /var/www/html/example/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./www:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wp_db_user
       WORDPRESS_DB_PASSWORD: wp_db_pass
       WORDPRESS_DB_NAME: wp_db_name
       WORDPRESS_CONFIG_EXTRA: |
-        define( 'WP_MEMORY_LIMIT', '96M' );
+        define( 'WP_MEMORY_LIMIT', '256M' );
 
   db:
     image: mysql:5.7
     container_name: db
     volumes:
-      - /var/lib/mysql:/var/lib/mysql
+      - ./mariadb:/var/lib/mysql
     restart: always
     ports:
       - "3306:3306"
